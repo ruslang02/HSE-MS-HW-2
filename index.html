@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Homework 2 - Math Statistics - Ruslan Garifullin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        crossorigin="anonymous" />
+    <style>
+        td,
+        th {
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 1rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br />
+        <a href="https://github.com/ruslang02/HSE-MS-HW-2" style="float: right">GitHub</a>
+        <h2>Гарифуллин Руслан Ильфатович <small>Вариант 2</small></h2>
+        <p class="lead"><b>Тестирование последовательности случайных чисел</b></p>
+        <b>Длина последовательности:</b>
+        <p>
+            <span class="btn-group">
+                <button class="btn btn-secondary active len">100</button>
+                <button class="btn btn-secondary len">600</button>
+                <button class="btn btn-secondary len">1000</button>
+                <button class="btn btn-secondary len">3000</button>
+                <button class="btn btn-secondary len">10000</button>
+            </span>
+            <button class="btn btn-success" onclick="runAll()">Запустить</button>
+        </p>
+        <h4>
+            Шаг 1. Генерация случайных чисел<br /><small>Метод серединных произведений.</small>
+        </h4>
+        <p>
+            Данный алгоритм генерации плохо справляется с генерацией более 800 значений, стремясь и достигая нуля с 828-го значения.
+        </p>
+        <p>
+            <kbd>z<sub>1</sub> = 8731, z<sub>2</sub> = 1617</kbd>
+        </p>
+        <p>
+            <kbd id="step1out" style="display: block"></kbd>
+        </p>
+        <p>
+            <canvas id="seqChart"
+                style="max-width: 500px; width: 500px; padding: 5px; border-radius: 5px; background-color: #EEE;"></canvas>
+        </p>
+        <h4>
+            Шаг 2. Проверка гипотезы о типе распределения<br /><small><code>R(0, 1)</code></small>
+        </h4>
+        <p>
+            Всего <b>k = 10</b> интервалов, уровень значимости <b>&alpha; = 0.05</b>.<br />
+            H<sub>0</sub> - последовательность имеет равномерное распределение <code>R(0, 1)</code> (основная
+            гипотеза).<br />
+            H<sub>A</sub> - последовательность не является равномерным распределением (альтернативная
+            гипотеза).<br /><br />
+            Основная гипотеза отвергается при <i>&chi;<sup>2</sup> > &chi;<sub>9, 0.05</sub><sup>2</sup> =
+                16.919</i> (критическое значение)<br />
+            При равномерном распределении <i>P(&alpha; &leqslant; X &lt; &beta;) = (&beta; - &alpha;) / (b - a) = 0.1 /
+                1 = <b>0.1 = P<sub>j</sub></b></i>
+        </p>
+        <p>
+            <canvas id="probChart"
+                style="max-width: 500px; width: 500px; padding: 5px; border-radius: 5px; background-color: #EEE;"></canvas>
+        </p>
+        <table id="step2table" class="table table-sm table-striped">
+
+        </table>
+        <p>
+            <kbd id="step2out" style="display: block"></kbd>
+        </p>
+        <p>
+            При данном уровне значимости данный метод генерации проходит тест на равномерную распределенность в интервале (100; 1000).
+        </p>
+        <h4>
+            Шаг 3. Тест перестановок
+        </h4>
+        <p>
+            Всего <b>k = 3! = 6</b> вариантов перестановок, уровень значимости <b>&alpha; = 0.05</b>.<br />
+            H<sub>0</sub> - перестановки возникают равномероятно.<br />
+            H<sub>A</sub> - перестановки возникают не равномероятно.<br /><br />
+            Основная гипотеза отвергается при <i>&chi;<sup>2</sup> > &chi;<sub>5, 0.05</sub><sup>2</sup> =
+                11.071</i> (критическое значение)<br />
+            При равномерном распределении ожидаемая <i>P(&alpha; &leqslant; X &lt; &beta;) = (&beta; - &alpha;) / (b - a) = <b>(1 / 6) = P<sub>j</sub></b></i><br />
+            Ожидаемая частота: <i>E<sub>j</sub> = P<sub>j</sub> * 9999 = 1666.5</i>
+        </p>
+        <table id="step3table" class="table table-sm table-striped">
+
+        </table>
+        <p>
+            <kbd id="step3out" style="display: block"></kbd>
+        </p>
+        <p>Судя по эксперименту, тройки чисел до 828-го значения следуют одинаковому паттерну, после чего зануляются и соответственно считаются таковыми тоже. Следовательно, тест на независимость последовательности провален.</p>
+        <h4>Вывод</h4>
+        <p>Данный алгоритм генерации псевдослучайных чисел при данных входных числах показал свою неэффективность при большом количестве значений. Эксперимент также показал, что генерируемая последовательность не независима и равномерно распределена только лишь при небольшом количестве значений.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="math.js"></script>
+</body>
+
+</html>
