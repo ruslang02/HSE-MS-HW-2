@@ -33,8 +33,7 @@ function generateSequence() {
   seq[1] = z2;
 
   for (let i = 2; i < size; i++) {
-    const number = seq[i - 2] * seq[i - 1];
-    seq[i] = (number / 100) % 10000;
+    seq[i] = (seq[i - 2] * seq[i - 1] / 100) % 10000;
   }
 
   seq = seq.map((x) => Math.round(x) / 10000);
@@ -228,29 +227,13 @@ const permuttable_head = `<thead>
 </thead>
 <tbody></tbody>`;
 
-const threeMap = new Map([
-  [27, "1-2-3"],
-  [39, "2-1-3"],
-  [57, "3-2-1"],
-  [30, "1-3-2"],
-  [45, "2-3-1"],
-  [54, "3-1-2"],
-]);
-
-/** 01 10 11
- **  1- 2- 3
- * 01_10_11 = 27  10_01_11 = 39
- * 11_10_01 = 57  01_11_10 = 30
- * 10_11_01 = 45  11_01_10 = 54
- */
 const rank = (arr) => {
   let [a, b, c] = arr.sort((a, b) => a - b);
   return arr
     .map((v) =>
       v === a ? (a = -1) && 1 : v === b ? (b = -1) && 2 : (c = -1) && 3
     )
-    .map((v, i) => v << ((2 - i) * 2))
-    .reduce((a, b) => a + b, 0);
+    .join("-");
 };
 
 function fillPermutTable() {
@@ -265,15 +248,17 @@ function fillPermutTable() {
   const estAvg = (size - 1) / 6;
 
   const seqs = new Array(Math.floor(size / 3))
-    .fill(0)
     .map((_v, i) => seq.slice(i * 3, i * 3 + 3))
     .map(rank);
 
-
-  const variants = [27, 57, 45, 39, 30, 54].map((r) => {
-    return [r, seqs.filter((_) => _ == r).length];
-  });
-
+  const variants = [
+    "1-2-3",
+    "2-1-3",
+    "3-2-1",
+    "1-3-2",
+    "2-3-1",
+    "3-1-2",
+  ].map((r) => [r, seqs.filter((_) => _ == r).length]);
 
   const stat = variants.map(
     ([, ni]) => ((ni - estAvg) * (ni - estAvg)) / estAvg
@@ -283,13 +268,12 @@ function fillPermutTable() {
   tbody.innerHTML = variants
     .map(
       ([v, n], i) => `<tr>
-    <td>${threeMap.get(v)}</td>
+    <td>${v}</td>
     <td>${estAvg.toFixed(2)}</td>
     <td>${n}</td>
     <td>${stat[i].toFixed(4)}</td>
     </tr>`
     )
-
     .join("");
 
   tbody.innerHTML += `<tr>
@@ -297,7 +281,7 @@ function fillPermutTable() {
       <td></td>
       <td><b>${seqs.length}</b></td>
       <td><b>${statSum.toFixed(2)}</b></td>
-      </tr>`;
+  </tr>`;
 
   out.innerHTML = `&chi;<sup>2</sup> = ${statSum}`;
   if (statSum <= chiRef) {
